@@ -39,6 +39,8 @@ const userSchema = new mongoose.Schema({
   rank:         { type: String, default: 'Rookie' },
   skills:       { type: skillSchema, default: () => ({}) },
   badges:       [badgeSchema],
+  // IDs of questions that have been delivered to the user recently
+  seenQuestions:[{ type: String }],
   gameHistory:  [{
     mode:       String,
     score:      Number,

@@ -41,6 +41,7 @@ router.get('/questions/:mode', auth, async (req, res) => {
     let questions = [];
     const totalCount = parseInt(count) || 10;
     const currentUser = req.user;
+    const excludeIds = (currentUser.seenQuestions || []);
 
     // NOTE: removed Redis caching; returning fresh questions each request
     // Caching by mode caused users to receive identical question sets repeatedly.
@@ -52,8 +53,8 @@ router.get('/questions/:mode', auth, async (req, res) => {
         currentUser.skills || {},
         mode,
         (cat, n, diff) => {
-          if (!cat || cat === 'mixed') return getMixedQuestions(n, diff);
-          return getQuestionsForSession(cat, n, diff);
+          if (!cat || cat === 'mixed') return getMixedQuestions(n, diff, excludeIds);
+          return getQuestionsForSession(cat, n, diff, excludeIds);
         },
         process.env.GEMINI_API_KEY ? generateAIQuestion : null,
         totalCount
@@ -73,7 +74,7 @@ router.get('/questions/:mode', auth, async (req, res) => {
         questions = [...aiQuestions];
       }
       const staticCount = totalCount - questions.length;
-      questions = [...questions, ...(mode === 'mixed' ? getMixedQuestions(staticCount, difficulty) : getQuestionsForSession(mode, staticCount, difficulty))];
+      questions = [...questions, ...(mode === 'mixed' ? getMixedQuestions(staticCount, difficulty, excludeIds) : getQuestionsForSession(mode, staticCount, difficulty, excludeIds))];
       questions = questions.sort(() => Math.random() - 0.5);
     }
 
@@ -99,6 +100,18 @@ router.get('/questions/:mode', auth, async (req, res) => {
       } : null
     };
 
+    // store seen question ids so future sessions avoid repeats (keep last 500)
+    const idsToSave = clientQuestions.map(q => q.id);
+    if (idsToSave.length) {
+      await User.findByIdAndUpdate(currentUser._id, {
+        $push: {
+          seenQuestions: {
+            $each: idsToSave,
+            $slice: -500
+          }
+        }
+      });
+    }
 
     res.json(responseData);
   } catch (err) {

@@ -793,11 +793,14 @@ const QUESTION_BANK = {
   ]
 };
 
-// Get random questions for a game session
-const getQuestionsForSession = (category, count = 5, difficulty = 'all') => {
+// Get random questions for a game session. Optionally exclude IDs that the user has already seen.
+const getQuestionsForSession = (category, count = 5, difficulty = 'all', exclude = []) => {
   let questions = QUESTION_BANK[category] || [];
   if (difficulty !== 'all') {
     questions = questions.filter(q => q.difficulty === difficulty);
+  }
+  if (exclude && exclude.length) {
+    questions = questions.filter(q => !exclude.includes(q.id));
   }
   // Shuffle
   const shuffled = [...questions].sort(() => Math.random() - 0.5);
@@ -805,14 +808,17 @@ const getQuestionsForSession = (category, count = 5, difficulty = 'all') => {
 };
 
 // Get mixed questions across all categories
-const getMixedQuestions = (count = 10, difficulty = 'all') => {
+const getMixedQuestions = (count = 10, difficulty = 'all', exclude = []) => {
   const categories = Object.keys(QUESTION_BANK);
-  const all = [];
+  let all = [];
   categories.forEach(cat => {
     let qs = QUESTION_BANK[cat];
     if (difficulty !== 'all') qs = qs.filter(q => q.difficulty === difficulty);
     all.push(...qs);
   });
+  if (exclude && exclude.length) {
+    all = all.filter(q => !exclude.includes(q.id));
+  }
   return [...all].sort(() => Math.random() - 0.5).slice(0, count);
 };
 
