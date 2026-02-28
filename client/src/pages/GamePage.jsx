@@ -20,17 +20,17 @@ function EmailScenario({ data }) {
       <div style={{ padding: '16px 20px', borderBottom: '1px solid #2a2a40' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr', gap: '6px 12px', fontSize: 12, marginBottom: 12 }}>
           <span style={{ color: '#6666aa', fontFamily: 'monospace' }}>FROM:</span>
-          <span style={{ color: data.answer === 'threat' ? '#ff3366' : '#e8e8f0' }}>{data.from}</span>
-          {data.to && <><span style={{ color: '#6666aa', fontFamily: 'monospace' }}>TO:</span><span>{data.to}</span></>}
+          <span style={{ color: data.answer === 'threat' ? '#ff3366' : '#ffffff' }}>{data.from}</span>
+          {data.to && <><span style={{ color: '#6666aa', fontFamily: 'monospace' }}>TO:</span><span style={{ color: '#ffffff' }}>{data.to}</span></>}
         </div>
-        <div style={{ fontSize: 17, fontWeight: 700 }}>{data.subject}</div>
+        <div style={{ fontSize: 17, fontWeight: 700, color: '#ffffff' }}>{data.subject}</div>
         {data.hasAttachment && (
           <div style={{ marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,100,68,0.1)', border: '1px solid rgba(255,100,68,0.3)', borderRadius: 6, padding: '4px 10px', fontSize: 12, color: '#ff6444' }}>
             📎 {data.attachmentName || 'attachment'}
           </div>
         )}
       </div>
-      <div style={{ padding: '16px 20px', fontSize: 14, lineHeight: 1.8, color: '#ccccdd' }}
+      <div style={{ padding: '16px 20px', fontSize: 14, lineHeight: 1.8, color: '#ffffff' }}
         dangerouslySetInnerHTML={{ __html: (data.body || '').replace(/\n/g, '<br/>') }} />
     </div>
   )
@@ -43,7 +43,7 @@ function PopupScenario({ data }) {
         <span style={{ position: 'absolute', top: 12, right: 16, color: '#555', fontSize: 16, cursor: 'default' }}>✕</span>
         <div style={{ fontSize: 44, marginBottom: 14 }}>{data.icon}</div>
         <div style={{ fontSize: 17, fontWeight: 800, color: '#ffd700', marginBottom: 10 }}>{data.title}</div>
-        <div style={{ fontSize: 13, color: '#9999bb', lineHeight: 1.7, marginBottom: 20 }}>{data.body}</div>
+        <div style={{ fontSize: 13, color: '#ffffff', lineHeight: 1.7, marginBottom: 20 }}>{data.body}</div>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
           {(data.buttons || []).map((btn, i) => (
             <button key={i} style={{ padding: '9px 20px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'default', border: 'none', background: i === 0 ? '#4488ff' : '#1a1a28', color: i === 0 ? '#fff' : '#aaa' }}>{btn}</button>
@@ -60,11 +60,11 @@ function UrlScenario({ data }) {
     <div style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#1a1a28', border: '1px solid #2a2a40', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontFamily: 'monospace', fontSize: 13 }}>
         <span>{data.lock ? '🔒' : '🔓'}</span>
-        <span style={{ flex: 1, wordBreak: 'break-all', color: '#e8e8f0' }}>{data.url}</span>
+        <span style={{ flex: 1, wordBreak: 'break-all', color: '#ffffff', fontWeight: 600 }}>{data.url}</span>
       </div>
-      <div style={{ fontSize: 14, color: '#aaaacc', lineHeight: 1.7, background: '#12121a', borderRadius: 8, padding: '12px 16px' }}>{data.context}</div>
+      <div style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.7, background: '#12121a', borderRadius: 8, padding: '12px 16px' }}>{data.context}</div>
       {data.protocol === 'http' && (
-        <div style={{ marginTop: 10, fontSize: 12, color: '#ff6444', fontFamily: 'monospace' }}>⚠️ No HTTPS — connection is unencrypted</div>
+        <div style={{ marginTop: 10, fontSize: 12, color: '#ff6444', fontFamily: 'monospace', fontWeight: 700 }}>⚠️ No HTTPS — connection is unencrypted</div>
       )}
     </div>
   )
@@ -96,7 +96,7 @@ function PasswordScenario({ data, onOptionSelect, selectedOption, isAnswered }) 
               <div>
                 <span style={{ fontFamily: 'monospace', fontSize: 15, color: '#e8e8f0', marginRight: 12 }}>{i + 1}.</span>
                 <span style={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 700, color: '#ffffff' }}>{opt.pw}</span>
-                {opt.hint && <div style={{ fontSize: 11, color: '#6666aa', marginTop: 4, marginLeft: 24 }}>{opt.hint}</div>}
+                {opt.hint && <div style={{ fontSize: 11, color: '#ccccff', marginTop: 4, marginLeft: 24 }}>{opt.hint}</div>}
               </div>
               <div style={{ display: 'flex', gap: 4 }}>
                 {[1,2,3,4].map(s => (
@@ -120,13 +120,13 @@ function MessageScenario({ data }) {
         <div style={{ background: `${color}22`, border: `1px solid ${color}44`, borderRadius: 6, padding: '4px 12px', fontSize: 12, fontWeight: 700, color }}>
           {data.channel}
         </div>
-        <span style={{ fontSize: 13, color: '#6666aa' }}>From: {data.from}</span>
+        <span style={{ fontSize: 13, color: '#ffffff', fontWeight: 500 }}>From: {data.from}</span>
       </div>
-      <div style={{ background: '#1a1a28', borderRadius: 12, padding: 16, borderLeft: `3px solid ${color}`, fontSize: 14, lineHeight: 1.8, color: '#ccccdd', marginBottom: 12 }}>
+      <div style={{ background: '#1a1a28', borderRadius: 12, padding: 16, borderLeft: `3px solid ${color}`, fontSize: 14, lineHeight: 1.8, color: '#ffffff', marginBottom: 12 }}>
         {data.message}
       </div>
       {data.context && (
-        <div style={{ fontSize: 12, color: '#6666aa', fontStyle: 'italic', padding: '8px 12px', background: '#12121a', borderRadius: 6 }}>📌 {data.context}</div>
+        <div style={{ fontSize: 12, color: '#ccccff', fontStyle: 'italic', padding: '8px 12px', background: '#12121a', borderRadius: 6 }}>📌 {data.context}</div>
       )}
     </div>
   )
@@ -139,13 +139,13 @@ function RansomwareScenario({ data }) {
         <div style={{ background: '#0d0d0d', border: '2px solid #ff3366', borderRadius: 10, padding: 28, textAlign: 'center', boxShadow: '0 0 40px rgba(255,51,102,0.2)' }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>🔒</div>
           <div style={{ fontSize: 18, fontWeight: 800, color: '#ff3366', marginBottom: 12 }}>{data.title}</div>
-          <div style={{ fontSize: 13, color: '#aaaacc', lineHeight: 1.8, marginBottom: 16 }}>{data.body}</div>
-          <div style={{ fontFamily: 'monospace', fontSize: 11, color: '#ff6444', padding: '8px 12px', background: 'rgba(255,51,102,0.05)', borderRadius: 6 }}>Source: {data.source}</div>
+          <div style={{ fontSize: 13, color: '#ffffff', lineHeight: 1.8, marginBottom: 16 }}>{data.body}</div>
+          <div style={{ fontFamily: 'monospace', fontSize: 11, color: '#ff6444', padding: '8px 12px', background: 'rgba(255,51,102,0.05)', borderRadius: 6, fontWeight: 700 }}>Source: {data.source}</div>
         </div>
       ) : (
         <div style={{ background: '#12121a', border: '1px solid #2a2a40', borderRadius: 10, padding: 20 }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: '#ffd700', marginBottom: 12 }}>{data.question}</div>
-          <div style={{ fontSize: 13, color: '#aaaacc' }}>{data.body}</div>
+          <div style={{ fontSize: 13, color: '#ffffff' }}>{data.body}</div>
         </div>
       )}
     </div>
@@ -156,13 +156,13 @@ function QRScenario({ data }) {
   return (
     <div style={{ padding: 24 }}>
       <div style={{ background: '#1a1a28', borderRadius: 12, padding: 20, marginBottom: 16 }}>
-        <div style={{ fontSize: 13, color: '#aaaacc', lineHeight: 1.8, marginBottom: 12 }}>{data.description}</div>
+        <div style={{ fontSize: 13, color: '#ffffff', lineHeight: 1.8, marginBottom: 12 }}>{data.description}</div>
         {data.previewUrl && (
-          <div style={{ fontFamily: 'monospace', fontSize: 12, padding: '10px 14px', background: '#0d0d1a', borderRadius: 8, color: '#e8e8f0', wordBreak: 'break-all' }}>🔗 {data.previewUrl}</div>
+          <div style={{ fontFamily: 'monospace', fontSize: 12, padding: '10px 14px', background: '#0d0d1a', borderRadius: 8, color: '#ffffff', wordBreak: 'break-all', fontWeight: 700 }}>🔗 {data.previewUrl}</div>
         )}
       </div>
       {data.context && (
-        <div style={{ fontSize: 12, color: '#6666aa', fontStyle: 'italic', padding: '8px 12px', background: '#12121a', borderRadius: 6 }}>📌 {data.context}</div>
+        <div style={{ fontSize: 12, color: '#ccccff', fontStyle: 'italic', padding: '8px 12px', background: '#12121a', borderRadius: 6 }}>📌 {data.context}</div>
       )}
     </div>
   )
@@ -179,7 +179,7 @@ function FakeLoginScenario({ data }) {
         </div>
         <div style={{ flex: 1, background: '#12121a', borderRadius: 5, padding: '5px 12px', display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'monospace', fontSize: 12 }}>
           <span>{isHttps ? '🔒' : '🔓'}</span>
-          <span style={{ color: '#e8e8f0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{data.url}</span>
+          <span style={{ color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 700 }}>{data.url}</span>
         </div>
       </div>
       {/* Login page content */}
@@ -198,7 +198,7 @@ function FakeLoginScenario({ data }) {
         {data.extraNote && <div style={{ fontSize: 11, color: '#888', marginTop: 14 }}>{data.extraNote}</div>}
       </div>
       {data.context && (
-        <div style={{ marginTop: 10, fontSize: 12, color: '#6666aa', fontStyle: 'italic', padding: '8px 12px', background: '#12121a', borderRadius: 6 }}>📌 {data.context}</div>
+        <div style={{ marginTop: 10, fontSize: 12, color: '#ccccff', fontStyle: 'italic', padding: '8px 12px', background: '#12121a', borderRadius: 6 }}>📌 {data.context}</div>
       )}
     </div>
   )
@@ -210,14 +210,14 @@ function WifiScenario({ data }) {
     <div style={{ padding: 24 }}>
       {data.networks ? (
         <>
-          <div style={{ fontSize: 13, color: '#aaaacc', marginBottom: 16 }}>{data.context}</div>
+          <div style={{ fontSize: 13, color: '#ffffff', marginBottom: 16 }}>{data.context}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {data.networks.map((n, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 16px', background: '#1a1a28', borderRadius: 10, border: '1px solid #2a2a40' }}>
                 <span style={{ fontSize: 20 }}>📡</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: 'monospace', fontSize: 14, fontWeight: 700 }}>{n.ssid}</div>
-                  <div style={{ fontSize: 11, color: '#6666aa' }}>{n.security} {n.note && `— ${n.note}`}</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: 14, fontWeight: 700, color: '#ffffff' }}>{n.ssid}</div>
+                  <div style={{ fontSize: 11, color: '#ccccff' }}>{n.security} {n.note && `— ${n.note}`}</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: 11, color: n.security === 'Open' ? '#ff3366' : '#00ff88', fontFamily: 'monospace' }}>{n.security}</div>
@@ -228,7 +228,7 @@ function WifiScenario({ data }) {
           </div>
         </>
       ) : (
-        <div style={{ fontSize: 14, color: '#aaaacc', lineHeight: 1.8 }}>{data.situation || data.description}</div>
+        <div style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.8 }}>{data.situation || data.description}</div>
       )}
     </div>
   )
@@ -269,7 +269,7 @@ function renderScenario(scenario, onOptionSelect, selectedOption, isAnswered) {
   if (type === 'wifi' || type === 'wifi_captive' || type === 'wifi_security') return <WifiScenario data={scenario} />
   if (type === 'workplace') return <MessageScenario data={{ channel: 'Workplace', from: 'Situation', message: scenario.situation, context: scenario.context }} />
   // Fallback
-  return <div style={{ padding: 24, color: '#aaa', fontSize: 14 }}>{JSON.stringify(scenario, null, 2)}</div>
+  return <div style={{ padding: 24, color: '#ffffff', fontSize: 14, fontFamily: 'monospace' }}>{JSON.stringify(scenario, null, 2)}</div>
 }
 
 // ── Main GamePage ──────────────────────────────────────────────
@@ -387,7 +387,7 @@ export default function GamePage() {
         {/* Question Label */}
         <motion.div key={currentIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#6666aa', letterSpacing: 3, textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#ffffff', letterSpacing: 3, textTransform: 'uppercase', fontWeight: 600 }}>
             {scenario?.type === 'password_rank' ? scenario.question : 'Classify this scenario — Safe or Threat?'}
           </span>
           {question.isAIGenerated && (
