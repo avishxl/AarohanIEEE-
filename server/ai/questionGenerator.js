@@ -201,102 +201,21 @@ Return ONLY this exact JSON, no markdown:
 const generateAIQuestion = async (category) => {
   const ai = getAI();
   if (!ai) {
-    console.log('⚠️  No Gemini API key — using static questions');
+    console.log('⚠️  No Gemini API key — using static questions only');
     return null;
   }
 
-  try {
-    const model = ai.getGenerativeModel({
-      model: 'gemini-1.5-flash' // Fast + free tier friendly
-    });
-
-    const basePrompt = ATTACK_PROMPTS[category] || ATTACK_PROMPTS.phishing;
-    // add a tiny random comment so the model doesn't produce the exact same JSON on repeated calls
-    const prompt = `${basePrompt}\n\n// random:${Math.random()}`;
-    
-    let result;
-    try {
-      result = await model.generateContent(prompt);
-    } catch (apiErr) {
-      console.error(`API call failed for ${category}:`, apiErr);
-      return null;
-    }
-    
-    const text = result.response?.text?.();
-    if (!text) {
-      console.warn(`No text response from Gemini for ${category}`);
-      return null;
-    }
-    
-    const trimmed = text.trim();
-
-    // Parse JSON — handle any wrapping backticks
-    const clean = trimmed.replace(/```json|```/g, '').trim();
-    let parsed;
-    try {
-      parsed = JSON.parse(clean);
-    } catch (parseErr) {
-      console.warn(`JSON parse failed for ${category}. Response: ${clean.substring(0, 200)}`);
-      return null;
-    }
-
-    // Validate required fields
-    if (!parsed.answer || !parsed.explanation) {
-      console.warn('AI question missing required fields, skipping');
-      return null;
-    }
-
-    const difficulty = parsed.difficulty || 'medium';
-    const points = difficulty === 'hard' ? 150 : difficulty === 'medium' ? 120 : 100;
-
-    console.log(`✨ Gemini generated ${category} question (${difficulty}, answer: ${parsed.answer})`);
-
-    return {
-      id: `ai_${category}_${Date.now()}`,
-      category,
-      difficulty,
-      isAIGenerated: true,
-      points,
-      scenario: parsed,
-      answer: parsed.answer,
-      explanation: parsed.explanation,
-      redFlags: parsed.redFlags || [],
-      options: parsed.options || null
-    };
-
-  } catch (err) {
-    console.error(`❌ Gemini error for ${category}:`, err.message);
-    return null; // Graceful fallback to static
-  }
+  // TEMPORARILY DISABLED: Gemini API having issues with JSON parsing
+  // Fall back to static questions for now
+  console.log(`⏭️  Skipping AI generation for ${category}, using static questions`);
+  return null;
 };
 
 // Generate multiple AI questions for a full session
 const generateAISession = async (category, count = 3) => {
   const results = [];
-  const seen = new Set();
-  let attempts = 0;
-
-  // Keep generating until we have enough unique questions or hit an attempt limit
-  while (results.length < count && attempts < count * 5) {
-    attempts++;
-    const q = await generateAIQuestion(category);
-    if (q) {
-      const key = JSON.stringify(q.scenario || q);
-      if (!seen.has(key)) {
-        results.push(q);
-        seen.add(key);
-      } else {
-        console.log('🔁 duplicate AI question detected, retrying');
-      }
-    }
-    // Small delay to avoid rate limiting between calls
-    await new Promise(r => setTimeout(r, 300));
-  }
-
-  if (results.length < count) {
-    console.warn(`Only generated ${results.length} unique AI questions for ${category}`);
-  }
-  return results;
+  return results; // Return empty array to trigger static question fallback
+};
 };
 
 module.exports = { generateAIQuestion, generateAISession };
