@@ -210,15 +210,11 @@ const generateAIQuestion = async (category) => {
       model: 'gemini-1.5-flash' // Fast + free tier friendly
     });
 
-    const generationConfig = {
-      temperature: 0.9,      // High creativity for varied scenarios
-      maxOutputTokens: 1024
-    };
-
     const basePrompt = ATTACK_PROMPTS[category] || ATTACK_PROMPTS.phishing;
     // add a tiny random comment so the model doesn't produce the exact same JSON on repeated calls
     const prompt = `${basePrompt}\n\n// random:${Math.random()}`;
-    const result = await model.generateContent(prompt, { generationConfig });
+    
+    const result = await model.generateContent(prompt);
     const text = result.response.text().trim();
 
     // Parse JSON — handle any wrapping backticks
