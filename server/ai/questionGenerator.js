@@ -214,12 +214,31 @@ const generateAIQuestion = async (category) => {
     // add a tiny random comment so the model doesn't produce the exact same JSON on repeated calls
     const prompt = `${basePrompt}\n\n// random:${Math.random()}`;
     
-    const result = await model.generateContent(prompt);
-    const text = result.response.text().trim();
+    let result;
+    try {
+      result = await model.generateContent(prompt);
+    } catch (apiErr) {
+      console.error(`API call failed for ${category}:`, apiErr);
+      return null;
+    }
+    
+    const text = result.response?.text?.();
+    if (!text) {
+      console.warn(`No text response from Gemini for ${category}`);
+      return null;
+    }
+    
+    const trimmed = text.trim();
 
     // Parse JSON — handle any wrapping backticks
-    const clean = text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    const clean = trimmed.replace(/```json|```/g, '').trim();
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch (parseErr) {
+      console.warn(`JSON parse failed for ${category}. Response: ${clean.substring(0, 200)}`);
+      return null;
+    }
 
     // Validate required fields
     if (!parsed.answer || !parsed.explanation) {
