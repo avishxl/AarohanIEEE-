@@ -84,7 +84,7 @@ function PasswordScenario({ data, onOptionSelect, selectedOption, isAnswered }) 
 
   return (
     <div style={{ padding: 24 }}>
-      <div style={{ fontFamily: 'monospace', fontSize: 12, color: '#6666aa', marginBottom: 16, letterSpacing: 2, textTransform: 'uppercase' }}>{data.question}</div>
+      <div style={{ fontFamily: 'monospace', fontSize: 12, color: '#e8e8f0', marginBottom: 16, letterSpacing: 2, textTransform: 'uppercase' }}>{data.question}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {(data.options || []).map((opt, i) => {
           const strength = strengthBar(opt.pw)
@@ -95,7 +95,7 @@ function PasswordScenario({ data, onOptionSelect, selectedOption, isAnswered }) 
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', background: isSelected ? 'rgba(68,136,255,0.1)' : '#1a1a28', border: isSelected ? '1.5px solid #4488ff' : '1px solid #2a2a40', borderRadius: 10, cursor: isAnswered ? 'default' : 'pointer', transition: 'all 0.2s', textAlign: 'left' }}>
               <div>
                 <span style={{ fontFamily: 'monospace', fontSize: 15, color: '#e8e8f0', marginRight: 12 }}>{i + 1}.</span>
-                <span style={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 700 }}>{opt.pw}</span>
+                <span style={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 700, color: '#ffffff' }}>{opt.pw}</span>
                 {opt.hint && <div style={{ fontSize: 11, color: '#6666aa', marginTop: 4, marginLeft: 24 }}>{opt.hint}</div>}
               </div>
               <div style={{ display: 'flex', gap: 4 }}>

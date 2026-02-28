@@ -4,7 +4,7 @@ const User = require('../models/User');
 const { getQuestionsForSession, getMixedQuestions } = require('../data/questions');
 const { generateAIQuestion, generateAISession } = require('../ai/questionGenerator');
 const { buildAdaptiveSession, getNextDifficulty } = require('../ai/adaptiveDifficulty');
-const { cache } = require('../utils/redis');
+// redis cache removed - caused question repetition across games
 const router = express.Router();
 
 const BADGES = [
@@ -42,12 +42,8 @@ router.get('/questions/:mode', auth, async (req, res) => {
     const totalCount = parseInt(count) || 10;
     const currentUser = req.user;
 
-    // Try to get cached session from Redis (avoids Gemini re-calls on refresh)
-    const cacheKey = `session:${req.userId}:${mode}:${difficulty}`;
-    const cached = await cache.get(cacheKey);
-    if (cached && cached.questions?.length > 0) {
-      return res.json({ questions: cached.questions, sessionId: cached.sessionId, adaptive: cached.adaptive });
-    }
+    // NOTE: removed Redis caching; returning fresh questions each request
+    // Caching by mode caused users to receive identical question sets repeatedly.
 
     // Use Adaptive Difficulty Engine (as shown in PDF architecture)
     let adaptiveResult = null;
@@ -103,8 +99,6 @@ router.get('/questions/:mode', auth, async (req, res) => {
       } : null
     };
 
-    // Cache session in Redis for 10 minutes
-    await cache.set(cacheKey, responseData, 600);
 
     res.json(responseData);
   } catch (err) {
