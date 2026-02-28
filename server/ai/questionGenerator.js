@@ -215,7 +215,9 @@ const generateAIQuestion = async (category) => {
       }
     });
 
-    const prompt = ATTACK_PROMPTS[category] || ATTACK_PROMPTS.phishing;
+    const basePrompt = ATTACK_PROMPTS[category] || ATTACK_PROMPTS.phishing;
+    // add a tiny random comment so the model doesn't produce the exact same JSON on repeated calls
+    const prompt = `${basePrompt}\n\n// random:${Math.random()}`;
     const result = await model.generateContent(prompt);
     const text = result.response.text().trim();
 
@@ -256,11 +258,28 @@ const generateAIQuestion = async (category) => {
 // Generate multiple AI questions for a full session
 const generateAISession = async (category, count = 3) => {
   const results = [];
-  for (let i = 0; i < count; i++) {
+  const seen = new Set();
+  let attempts = 0;
+
+  // Keep generating until we have enough unique questions or hit an attempt limit
+  while (results.length < count && attempts < count * 5) {
+    attempts++;
     const q = await generateAIQuestion(category);
-    if (q) results.push(q);
-    // Small delay to avoid rate limiting
+    if (q) {
+      const key = JSON.stringify(q.scenario || q);
+      if (!seen.has(key)) {
+        results.push(q);
+        seen.add(key);
+      } else {
+        console.log('🔁 duplicate AI question detected, retrying');
+      }
+    }
+    // Small delay to avoid rate limiting between calls
     await new Promise(r => setTimeout(r, 300));
+  }
+
+  if (results.length < count) {
+    console.warn(`Only generated ${results.length} unique AI questions for ${category}`);
   }
   return results;
 };

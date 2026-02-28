@@ -141,6 +141,24 @@ export const useGameStore = create((set, get) => ({
 
   goHome: () => set({ phase: 'home' }),
 
+  // Restart the current session using existing questions
+  restartGame: () => {
+    const state = get()
+    set({
+      currentIndex: 0,
+      score: 0,
+      lives: 3,
+      streak: 0,
+      bestStreak: 0,
+      correctCount: 0,
+      wrongCount: 0,
+      phase: 'game',
+      isAnswered: false,
+      lastResult: null,
+      skillScores: {}
+    })
+  },
+
   addLiveActivity: (activity) => set(s => ({
     liveActivity: [activity, ...s.liveActivity].slice(0, 5)
   })),

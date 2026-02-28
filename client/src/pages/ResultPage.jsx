@@ -29,7 +29,7 @@ const CATEGORY_TIPS = {
 }
 
 export default function ResultPage() {
-  const { score, correctCount, wrongCount, bestStreak, questions, mode, skillScores, goHome } = useGameStore()
+  const { score, correctCount, wrongCount, bestStreak, questions, mode, skillScores, goHome, restartGame } = useGameStore()
   const { user, updateUser } = useAuthStore()
   const { emitScore } = useSocket()
   const [newBadges, setNewBadges] = useState([])
@@ -186,9 +186,13 @@ export default function ResultPage() {
         {/* Action Buttons */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
           style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <motion.button onClick={() => { goHome() }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          <motion.button onClick={() => { restartGame() }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
             style={{ flex: 1, minWidth: 160, padding: '15px', background: 'linear-gradient(135deg, #00ff88, #00cc66)', color: '#000', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 800, fontFamily: "'Syne', sans-serif", cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 1 }}>
             ▶ Play Again
+          </motion.button>
+          <motion.button onClick={() => { goHome() }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+            style={{ flex: 1, minWidth: 160, padding: '15px', background: 'transparent', color: '#e8e8f0', border: '1px solid #2a2a40', borderRadius: 10, fontSize: 15, fontWeight: 700, fontFamily: "'Syne', sans-serif", cursor: 'pointer' }}>
+            ⬅ Return Home
           </motion.button>
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
             onClick={() => { toast.success('Score copied! Share it with your team.'); navigator.clipboard?.writeText(`I scored ${score} pts (${accuracy}% accuracy) on CyberShield! 🛡️ Can you beat me?`) }}
